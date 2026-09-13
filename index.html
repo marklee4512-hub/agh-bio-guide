@@ -161,10 +161,11 @@
             
             <div class="header-right">
                 <div class="lang-bar">
-                    <button class="btn-lang active" onclick="changeLanguage('KOR')">KOR</button>
-                    <button class="btn-lang" onclick="changeLanguage('ENG')">ENG</button>
-                    <button class="btn-lang" onclick="changeLanguage('JP')">日本語</button>
-                    <button class="btn-lang" onclick="changeLanguage('CN')">中文</button>
+                    <!-- 안전한 이벤트 핸들링을 위해 this 파라미터 추가 -->
+                    <button class="btn-lang active" onclick="changeLanguage('KOR', this)">KOR</button>
+                    <button class="btn-lang" onclick="changeLanguage('ENG', this)">ENG</button>
+                    <button class="btn-lang" onclick="changeLanguage('JP', this)">日本語</button>
+                    <button class="btn-lang" onclick="changeLanguage('CN', this)">中文</button>
                 </div>
                 <div class="util-bar">
                     <button id="btn-zoom" class="btn-util btn-zoom" onclick="toggleZoom()">🔍 Larger Font</button>
@@ -328,7 +329,6 @@
             }
         };
 
-        // 완벽하게 정비된 다국어 번역 함수 (식물성, 해조류, 포스파티딜세린 등 전면 보강)
         function getLocalizedProduct(prod) {
             if (currentLang === 'KOR') return prod;
             
@@ -597,7 +597,7 @@
             { "name": "호주 헬스엔 HEALTH N 폴리코사놀 POLICOSANOL 70mg 90정", "efficacy": "고함량(70mg) 식물성 폴리코사놀이 나쁜 LDL 수치는 내리고 좋은 HDL 수치는 올려 집중적인 혈관 관리에 도움을 줍니다.", "usage": "하루 1정 (식후 충분한 물과 함께 섭취)", "type_and_feature": "정제 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0209/1552", "options": [], "warning_drugs": ["고지혈증약"] },
             { "name": "네이쳐스탑 코엔자임 (CoQ10) + 비타민 E + 아연 120캡슐", "efficacy": "심장 근육의 에너지를 생성하는 코엔자임Q10과 항산화 비타민E가 만나 혈압 감소 및 전신 활력 증진에 효과적입니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0209/623", "options": [], "warning_drugs": ["혈압약 / 항응고제"] },
             { "name": "Vitatree 비타트리 Super 리버디톡스 38000 (밀크씨슬) 100캡슐", "efficacy": "고농축 밀크씨슬 추출물이 손상된 간세포의 재생을 촉진하고 독소 배출을 도와 만성 피로와 숙취 해소에 탁월합니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0209/648", "options": [], "warning_drugs": ["간 / 신장 관련 질환 약"] },
-            { "name": "Health N 헬스엔 Silymarin Glutathione Liver Care 실리마린 (밀크시슬) 글루타치온 리버 (간) 케어 Complex 90캡슐", "efficacy": "간 해독의 핵심 성분인 글루타치온과 실리마린이 최적의 비율로 배합되어 강력한 항산화 및 간 보호 효과를 발휘합니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0203/1403", "options": [], "warning_drugs": ["간 / 신장 관련 질환 약"] },
+            { "name": "Health N 헬스엔 Silymarin Glutathione Liver Care 실리마린 (밀크시슬) 글루타치온 리버 (간) 케어 Complex 90캡슐", "efficacy": "간 해독의 핵심 성분인 글루타치온과 실리마린이 최적의 비율로 배합되어 강력한 항산화 및 간 보호 효과 발휘합니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0203/1403", "options": [], "warning_drugs": ["간 / 신장 관련 질환 약"] },
             { "name": "네이쳐스탑 리버 디톡스 LIVER DETOX 52500 60캡슐", "efficacy": "초고함량(52500mg) 밀크씨슬 추출물이 피로에 찌든 간의 독소를 강력하게 정화하여 가볍고 상쾌한 아침을 선사합니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0209/1191", "options": [], "warning_drugs": ["간 / 신장 관련 질환 약"] }
           ],
           "여성건강_노화방지": [
@@ -937,10 +937,24 @@
             resetIdleTimer();
         }
 
-        function changeLanguage(lang) {
+        // 💡 핵심 오류 수정 완료: 에러를 일으키던 event 객체 대신 안전하게 버튼(btnElement)을 통과받아 번역 튕김 현상을 100% 차단했습니다.
+        function changeLanguage(lang, btnElement) {
             currentLang = lang;
             document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            if (btnElement) {
+                btnElement.classList.add('active');
+            } else {
+                document.querySelectorAll('.btn-lang').forEach(b => {
+                    if ((lang === 'KOR' && b.innerText.includes('KOR')) ||
+                        (lang === 'ENG' && b.innerText.includes('ENG')) ||
+                        (lang === 'JP' && b.innerText.includes('日本')) ||
+                        (lang === 'CN' && b.innerText.includes('中文'))) {
+                        b.classList.add('active');
+                    }
+                });
+            }
+            
             updateUITexts();
             renderDynamicGrids();
             startRollingBar();
@@ -1012,7 +1026,6 @@
             document.getElementById('txt-modal-close').innerText = t.close;
 
             document.getElementById('staff-modal-title').innerText = t.staffTitle;
-            // 💡 오류 수정 포인트: innerHTML로 변경하여 <br> 태그가 정상 작동하도록 함
             document.getElementById('staff-modal-desc').innerHTML = t.staffDesc;
             document.getElementById('staff-modal-btn').innerText = t.staffBtn;
             document.getElementById('txt-hot-deal').innerHTML = t.hotDealTitle;
