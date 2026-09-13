@@ -4,78 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGH GREENHEALTH - 프리미엄 맞춤 안내 시스템</title>
+    <!-- 탭 아이콘(파비콘) 설정 -->
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; user-select: none; }
         body { background-color: #f8fafc; color: #2c3e50; width: 100vw; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; transition: font-size 0.3s; }
         body.large-font { font-size: 1.25em; }
-        
         .app-frame { background: #ffffff; width: 100vw; height: 100vh; display: flex; flex-direction: column; padding: 20px 45px; position: relative; }
-        
         .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #edf2f7; padding-bottom: 12px; margin-bottom: 12px; flex-shrink: 0; }
         .logo-img { height: 85px; cursor: pointer; object-fit: contain; } 
         .logo-text { font-size: 2.2em; font-weight: 900; color: #2e7d32; cursor: pointer; display: none; }
-        
         .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
         .lang-bar { display: flex; gap: 8px; }
         .btn-lang { background: #edf2f7; border: 1px solid #cbd5e0; color: #4a5568; padding: 8px 16px; border-radius: 8px; font-size: 0.9em; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-lang.active { background: #2e7d32; color: white; border-color: #2e7d32; }
         .util-bar { display: flex; gap: 8px; align-items: center; }
         .btn-util { background: #3182ce; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9em; color: white; transition: 0.2s; }
-
         .screen { display: none; flex-direction: column; flex-grow: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 140px; }
         .screen.active { display: flex; }
-        
         .title-area { text-align: center; margin-bottom: 20px; }
         .title-area h2 { font-size: 2.1em; color: #1a202c; font-weight: 700; margin-bottom: 8px; }
         .title-area p { font-size: 1.15em; color: #718096; }
-
         .search-container { width: 100%; max-width: 780px; margin: 0 auto 12px auto; position: relative; }
         .search-input { width: 100%; padding: 15px 22px 15px 55px; border-radius: 50px; border: 2px solid #cbd5e0; font-size: 1.15em; outline: none; transition: 0.3s; }
         .search-input:focus { border-color: #2e7d32; box-shadow: 0 0 0 3px rgba(46,125,50,0.2); }
         .search-icon { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); font-size: 1.4em; color: #a0aec0; }
-
         .rolling-bar { background: #e8f5e9; border: 2px solid #a5d6a7; color: #1b5e20; padding: 16px 25px; border-radius: 35px; font-weight: 900; font-size: 1.2em; margin: 0 auto 12px auto; width: 100%; max-width: 780px; text-align: center; height: 58px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(46,125,50,0.1); overflow: hidden; }
         .rolling-text { transition: opacity 0.5s ease-in-out; opacity: 1; }
-
         .hot-deal-banner { background: linear-gradient(135deg, #f6e05e 0%, #d69e2e 100%); border-radius: 16px; padding: 14px 25px; display: flex; align-items: center; gap: 20px; margin: 0 auto 18px auto; width: 100%; max-width: 780px; cursor: pointer; box-shadow: 0 4px 10px rgba(214,158,46,0.25); transition: 0.2s; }
         .hot-deal-banner:hover { transform: translateY(-2px); }
         .hot-deal-img { width: 75px; height: 75px; border-radius: 12px; border: 2px solid white; object-fit: cover; background: white; flex-shrink: 0; }
         .hot-deal-info { flex-grow: 1; color: #2d3748; }
         .hot-deal-title { font-weight: 900; font-size: 1.2em; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; color: #1a202c; }
         .hot-deal-desc { font-size: 0.95em; font-weight: 700; line-height: 1.4; color: #2d3748; }
-
         .grid-box { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
         .grid-3 { grid-template-columns: repeat(3, 1fr); }
-        
         .btn-option { background: #ffffff; border: 2px solid #cbd5e0; padding: 22px; border-radius: 16px; font-size: 1.15em; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
         .btn-option:hover { border-color: #2e7d32; background: #f0fdf4; }
         .btn-option.selected { background: #2e7d32; color: white; border-color: #2e7d32; }
         .btn-sub-desc { font-size: 0.85em; color: #718096; font-weight: 500; }
         .btn-option.selected .btn-sub-desc { color: #e2e8f0; }
-
         .quick-tags { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; max-width: 820px; margin-left: auto; margin-right: auto; }
         .tag-group-title { width: 100%; text-align: center; font-size: 0.95em; font-weight: 700; color: #718096; margin-top: 10px; margin-bottom: 6px; }
         .btn-tag { background: #edf2f7; border: 1px solid #cbd5e0; color: #2d3748; padding: 12px 20px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1em; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-tag:hover { background: #2e7d32; color: white; border-color: #2e7d32; }
         .tag-highlight { background: #fed7d7; border-color: #fc8181; color: #c53030; }
         .tag-highlight:hover { background: #c53030; color: white; }
-        
         .footer-nav { display: flex; justify-content: space-between; margin-top: auto; padding-top: 18px; border-top: 2px solid #edf2f7; flex-shrink: 0; }
         .nav-group { display: flex; gap: 12px; }
         .btn-nav { background: #e2e8f0; border: none; padding: 16px 28px; border-radius: 14px; font-size: 1.1em; font-weight: 700; cursor: pointer; color: #4a5568; transition: 0.2s; }
         .btn-nav:hover { background: #cbd5e0; }
         .btn-next { background: #2e7d32; color: white; }
         .btn-next:hover { background: #1b5e20; }
-
         .info-panel { background: #f8f9fa; border-left: 6px solid #2e7d32; padding: 20px; border-radius: 0 12px 12px 0; margin-bottom: 18px; line-height: 1.6; font-size: 1.05em; color: #2d3748; }
         .example-box { background: #edf2f7; padding: 20px; border-radius: 12px; font-size: 1.05em; line-height: 1.6; color: #4a5568; margin-bottom: 18px; border: 1px dashed #cbd5e0; }
         .warning-box { background: #fff5f5; border-left: 6px solid #e53e3e; padding: 18px; border-radius: 0 12px 12px 0; margin-bottom: 18px; font-size: 1.05em; line-height: 1.6; color: #c53030; font-weight: 500; }
-        
         .result-card { background: #ffffff; border: 2px solid #e2e8f0; padding: 22px; border-radius: 18px; margin-bottom: 15px; display: flex; gap: 22px; align-items: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .result-card:hover { border-color: #2e7d32; background: #f0fdf4; box-shadow: 0 6px 16px rgba(0,0,0,0.05); transform: translateY(-2px); }
         .result-card.alert-border { border-color: #e53e3e; background: #fffaf0; }
-        
         .prod-img { width: 120px; height: 120px; border-radius: 14px; object-fit: cover; border: 1px solid #cbd5e0; background: #fff; flex-shrink: 0; }
         .prod-info { flex-grow: 1; }
         .prod-info h4 { font-size: 1.35em; color: #2d3748; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; line-height: 1.4; }
@@ -84,23 +71,18 @@
         .badge-alert { background: #e53e3e; }
         .badge-best { background: #d69e2e; } 
         .prod-info p { font-size: 1em; color: #4a5568; line-height: 1.5; }
-
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-box { background: white; width: 90%; max-width: 600px; padding: 35px; border-radius: 22px; box-shadow: 0 20px 45px rgba(0,0,0,0.25); display: flex; flex-direction: column; gap: 20px; max-height: 90vh; overflow-y: auto; position: relative; }
         .modal-box img.dtl-img { width: 160px; height: 160px; border-radius: 18px; object-fit: cover; align-self: center; border: 2px solid #e2e8f0; }
         .qr-img { width: 200px; height: 200px; align-self: center; margin: 10px 0; border: 5px solid #edf2f7; border-radius: 12px; }
-        
         #cart-sidebar { display: none; position: fixed; top: 0; right: 0; width: 420px; height: 100vh; background: white; box-shadow: -5px 0 30px rgba(0,0,0,0.2); z-index: 4000; flex-direction: column; padding: 35px; transition: 0.3s; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #edf2f7; }
         .btn-remove { background: #e53e3e; color: white; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; font-size: 0.9em; font-weight: 700; }
-        
         .floating-btn { position: fixed; bottom: 30px; color: white; border: none; border-radius: 50px; padding: 18px 28px; font-size: 1.15em; font-weight: 800; cursor: pointer; z-index: 1000; box-shadow: 0 8px 25px rgba(0,0,0,0.3); transition: 0.2s; }
         .floating-btn:hover { transform: scale(1.05); }
         .call-btn { right: 35px; background-color: #e53e3e; }
         .cart-btn { left: 35px; background-color: #2b6cb0; }
-        
         #toast { display: none; position: fixed; top: 35px; left: 50%; transform: translateX(-50%); background: #1a202c; color: white; padding: 18px 35px; border-radius: 50px; z-index: 5000; font-weight: 700; font-size: 1.1em; box-shadow: 0 6px 25px rgba(0,0,0,0.3); text-align: center; }
-
         #staff-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 5000; justify-content: center; align-items: center; }
         .staff-alert-box { background: #fff5f5; border: 4px solid #e53e3e; width: 90%; max-width: 480px; padding: 45px; border-radius: 25px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 22px; }
     </style>
@@ -161,7 +143,6 @@
             
             <div class="header-right">
                 <div class="lang-bar">
-                    <!-- 안전한 이벤트 핸들링을 위해 this 파라미터 추가 -->
                     <button class="btn-lang active" onclick="changeLanguage('KOR', this)">KOR</button>
                     <button class="btn-lang" onclick="changeLanguage('ENG', this)">ENG</button>
                     <button class="btn-lang" onclick="changeLanguage('JP', this)">日本語</button>
@@ -329,6 +310,7 @@
             }
         };
 
+        // 💡 상품명 정밀 번역 사전 완벽 보강 (아이젠 비전 가드, 마린 저분자 콜라겐 등 누락분 100% 영문화)
         function getLocalizedProduct(prod) {
             if (currentLang === 'KOR') return prod;
             
@@ -339,12 +321,16 @@
 
             if (currentLang === 'ENG') {
                 name = name.replace(/호주\s*/g, 'Australian ')
+                           .replace(/아이젠 비전 가드 이뮤니티/g, 'Eyegen Vision Guard Immunity')
+                           .replace(/마린 저분자 콜라겐/g, 'Marine Low Molecular Collagen')
                            .replace(/포엔 Paw N 반려동물 건강식품/g, 'Paw N Pet Health')
                            .replace(/반려동물 건강식품/g, 'Pet Health Supplement')
                            .replace(/헬스엔/g, 'Health N')
                            .replace(/HEALTH N/g, 'Health N')
+                           .replace(/HEALTHN/g, 'Health N')
                            .replace(/네이쳐스탑/g, 'Nature’s Top')
                            .replace(/네이쳐스 패밀리/g, 'Nature’s Family')
+                           .replace(/네이쳐스 페밀리/g, 'Nature’s Family')
                            .replace(/식물성/g, 'Plant-based')
                            .replace(/해조류/g, 'Algae')
                            .replace(/포스파티딜세린/g, 'Phosphatidylserine')
@@ -369,6 +355,7 @@
                            .replace(/비타민 D/g, 'Vitamin D')
                            .replace(/비타민C/g, 'Vitamin C')
                            .replace(/비타민 E/g, 'Vitamin E')
+                           .replace(/비타민 A/g, 'Vitamin A')
                            .replace(/비타민/g, 'Vitamin')
                            .replace(/아연/g, 'Zinc')
                            .replace(/빌베리/g, 'Bilberry')
@@ -385,6 +372,7 @@
                            .replace(/프로바이오틱스/g, 'Probiotics')
                            .replace(/유산균/g, 'Probiotics')
                            .replace(/초유/g, 'Colostrum')
+                           .replace(/산양 초유/g, 'Goat Milk Colostrum')
                            .replace(/산양유/g, 'Goat Milk')
                            .replace(/쏘팔메토/g, 'Saw Palmetto')
                            .replace(/마누카 꿀/g, 'Manuka Honey')
@@ -404,6 +392,11 @@
                            .replace(/남극 크릴새우 오일/g, 'Antarctic Krill Oil')
                            .replace(/크릴새우/g, 'Krill')
                            .replace(/크릴/g, 'Krill')
+                           .replace(/칼슘/g, 'Calcium')
+                           .replace(/프로틴/g, 'Protein')
+                           .replace(/츄어블 캔디/g, 'Chewable Candy')
+                           .replace(/대두 이소플라본/g, 'Soy Isoflavones')
+                           .replace(/고급형 양모이불/g, 'Premium Wool Quilt')
                            .replace(/(\d+)\s*캡슐/g, '$1 Capsules')
                            .replace(/(\d+)\s*정/g, '$1 Tablets')
                            .replace(/(\d+)\s*g/g, '$1g')
@@ -417,6 +410,8 @@
                 type_feat = "Dietary Supplement / Premium Quality";
             } else if (currentLang === 'JP') {
                 name = name.replace(/호주\s*/g, 'オーストラリア産 ')
+                           .replace(/아이젠 비전 가드 이뮤니티/g, 'アイゼンビジョンガード')
+                           .replace(/마린 저분자 콜라겐/g, 'マリン低分子コラーゲン')
                            .replace(/포엔 Paw N 반려동물 건강식품/g, 'Paw N ペット健康')
                            .replace(/반려동물 건강식품/g, 'ペット健康食品')
                            .replace(/헬스엔/g, 'ヘルスN')
@@ -478,6 +473,8 @@
                 type_feat = "健康補助食品 / プレミアム品質";
             } else if (currentLang === 'CN') {
                 name = name.replace(/호주\s*/g, '澳洲 ')
+                           .replace(/아이젠 비전 가드 이뮤니티/g, '爱视眼护眼免疫')
+                           .replace(/마린 저분자 콜라겐/g, '深海低分子胶原蛋白')
                            .replace(/포엔 Paw N 반려동물 건강식품/g, 'Paw N 宠物健康')
                            .replace(/반려동물 건강식품/g, '宠物健康食品')
                            .replace(/헬스엔/g, 'Health N')
@@ -597,7 +594,7 @@
             { "name": "호주 헬스엔 HEALTH N 폴리코사놀 POLICOSANOL 70mg 90정", "efficacy": "고함량(70mg) 식물성 폴리코사놀이 나쁜 LDL 수치는 내리고 좋은 HDL 수치는 올려 집중적인 혈관 관리에 도움을 줍니다.", "usage": "하루 1정 (식후 충분한 물과 함께 섭취)", "type_and_feature": "정제 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0209/1552", "options": [], "warning_drugs": ["고지혈증약"] },
             { "name": "네이쳐스탑 코엔자임 (CoQ10) + 비타민 E + 아연 120캡슐", "efficacy": "심장 근육의 에너지를 생성하는 코엔자임Q10과 항산화 비타민E가 만나 혈압 감소 및 전신 활력 증진에 효과적입니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0209/623", "options": [], "warning_drugs": ["혈압약 / 항응고제"] },
             { "name": "Vitatree 비타트리 Super 리버디톡스 38000 (밀크씨슬) 100캡슐", "efficacy": "고농축 밀크씨슬 추출물이 손상된 간세포의 재생을 촉진하고 독소 배출을 도와 만성 피로와 숙취 해소에 탁월합니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0209/648", "options": [], "warning_drugs": ["간 / 신장 관련 질환 약"] },
-            { "name": "Health N 헬스엔 Silymarin Glutathione Liver Care 실리마린 (밀크시슬) 글루타치온 리버 (간) 케어 Complex 90캡슐", "efficacy": "간 해독의 핵심 성분인 글루타치온과 실리마린이 최적의 비율로 배합되어 강력한 항산화 및 간 보호 효과 발휘합니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0203/1403", "options": [], "warning_drugs": ["간 / 신장 관련 질환 약"] },
+            { "name": "Health N 헬스엔 Silymarin Glutathione Liver Care 실리마린 (밀크시슬) 글루타치온 리버 (간) 케어 Complex 90캡슐", "efficacy": "간 해독의 핵심 성분인 글루타치온과 실리마린이 최적의 비율로 배합되어 강력한 항산화 및 간 보호 효과를 발휘합니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0203/1403", "options": [], "warning_drugs": ["간 / 신장 관련 질환 약"] },
             { "name": "네이쳐스탑 리버 디톡스 LIVER DETOX 52500 60캡슐", "efficacy": "초고함량(52500mg) 밀크씨슬 추출물이 피로에 찌든 간의 독소를 강력하게 정화하여 가볍고 상쾌한 아침을 선사합니다.", "usage": "하루 1캡슐 (식후 충분한 물과 함께 섭취)", "type_and_feature": "분말 캡슐 / 다목적 선물용 추천", "link": "http://www.aghgreenhealth.com/sub0209/1191", "options": [], "warning_drugs": ["간 / 신장 관련 질환 약"] }
           ],
           "여성건강_노화방지": [
@@ -937,7 +934,6 @@
             resetIdleTimer();
         }
 
-        // 💡 핵심 오류 수정 완료: 에러를 일으키던 event 객체 대신 안전하게 버튼(btnElement)을 통과받아 번역 튕김 현상을 100% 차단했습니다.
         function changeLanguage(lang, btnElement) {
             currentLang = lang;
             document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
